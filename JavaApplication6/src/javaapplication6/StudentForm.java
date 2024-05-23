@@ -4,6 +4,8 @@
  */
 package javaapplication6;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 
@@ -150,41 +152,44 @@ public class StudentForm extends javax.swing.JFrame {
     }//GEN-LAST:event_nameActionPerformed
 
     private void savebutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savebutActionPerformed
-        // TODO add your handling code here:
-         String studentName = name.getText();
-        String rollNumber = roll.getText();
-        String projectName = pro.getText();
-
-        // Database connection details
-        String url = "jdbc:mysql://localhost:3306/students_db";
-        String username = "root";
-        String password = "1234";
-
         try {
-            int rowsAffected;
-             // Create a PreparedStatement for the insert query
-             try ( // Establish connection to the database
-                     Connection connection = DriverManager.getConnection(url, username, password)) {
-                 // Create a PreparedStatement for the insert query
-                 String insertQuery = "INSERT INTO students (name, roll_number, project_name) VALUES (?, ?, ?)";
-                // Set parameters for the PreparedStatement
-                try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
-                    // Set parameters for the PreparedStatement
-                    preparedStatement.setString(1, studentName);
-                    preparedStatement.setString(2, rollNumber);
-                    preparedStatement.setString(3, projectName);
-                    // Execute the insert query
-                    rowsAffected = preparedStatement.executeUpdate();
-                    // Close the PreparedStatement and the database connection
-                }
-             }
+            // TODO add your handling code here:
+            String studentName = name.getText();
+            String rollNumber = roll.getText();
+            String projectName = pro.getText();
+            
+            // Database connection details
+            String url = "jdbc:mysql://localhost:3306/your_database_name";
+            String username = "your_username";
+            String password = "your_password";
+            
+            
+            // Establish connection to the database
+            Connection connection = DriverManager.getConnection(url, username, password);
+
+            // Create a PreparedStatement for the insert query
+            String insertQuery = "INSERT INTO students (name, roll_number, project_name) VALUES (?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
+
+            // Set parameters for the PreparedStatement
+            preparedStatement.setString(1, studentName);
+            preparedStatement.setString(2, rollNumber);
+            preparedStatement.setString(3, projectName);
+
+            // Execute the insert query
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            // Close the PreparedStatement and the database connection
+            preparedStatement.close();
+            connection.close();
 
             // Display a success message
             JOptionPane.showMessageDialog(this, rowsAffected + " row(s) inserted successfully.");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+       
+
         
     }//GEN-LAST:event_savebutActionPerformed
 
